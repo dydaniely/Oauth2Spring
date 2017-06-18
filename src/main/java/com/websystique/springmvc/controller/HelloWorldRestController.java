@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,7 +30,8 @@ public class HelloWorldRestController {
 
     @RequestMapping(value = "/user/", method = RequestMethod.GET)
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<List<User>> listAllUsers() {
+    public ResponseEntity<List<User>> listAllUsers(Authentication authentication) {
+        System.out.println("User method. access as: " + authentication.getName());
         List<User> users = userService.findAllUsers();
         if (users.isEmpty()) {
             return new ResponseEntity<List<User>>(HttpStatus.NO_CONTENT);// You many decide to return HttpStatus.NOT_FOUND
@@ -42,7 +44,8 @@ public class HelloWorldRestController {
 
     @RequestMapping(value = "/user/{id}", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<User> getUser(@PathVariable("id") long id) {
+    public ResponseEntity<User> getUser(@PathVariable("id") long id, Authentication authentication) {
+        System.out.println("ADMIN method. access as: " + authentication.getName());
         System.out.println("Fetching User with id " + id);
         User user = userService.findById(id);
         if (user == null) {

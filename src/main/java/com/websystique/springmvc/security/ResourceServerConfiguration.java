@@ -6,6 +6,10 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.error.OAuth2AccessDeniedHandler;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
+
+import com.websystique.springmvc.configuration.CORSFilter;
+import com.websystique.springmvc.impersonation.ImpersonationFilter;
 
 @Configuration
 @EnableResourceServer
@@ -20,12 +24,16 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 
 	@Override
 	public void configure(HttpSecurity http) throws Exception {
-		http.
-		anonymous().disable()
-		.requestMatchers().antMatchers("/user/**")
-		.and().authorizeRequests()
-		.antMatchers("/user/**").authenticated()
-		.and().exceptionHandling().accessDeniedHandler(new OAuth2AccessDeniedHandler());
+		http
+		.anonymous().disable()
+		.requestMatchers().antMatchers("/**")
+		.and()
+		.authorizeRequests()
+		.antMatchers("/**").authenticated()
+		.and()
+		.exceptionHandling().accessDeniedHandler(new OAuth2AccessDeniedHandler())
+		.and().addFilterAfter(new ImpersonationFilter(), FilterSecurityInterceptor.class)
+		;
 	}
 
 }
