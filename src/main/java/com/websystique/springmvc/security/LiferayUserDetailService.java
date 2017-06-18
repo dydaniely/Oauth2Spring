@@ -28,11 +28,11 @@ public class LiferayUserDetailService implements UserDetailsService {
         try {
             List<GrantedAuthority> roles = new ArrayList<>();
             if (username.equals("test")) {
-                roles.add(new SimpleGrantedAuthority("ADMIN"));
+                roles.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
             } else if (username.equals("bill")) {
-                roles.add(new SimpleGrantedAuthority("USER"));
+                roles.add(new SimpleGrantedAuthority("ROLE_USER"));
             } else if (username.equals("bob")) {
-                roles.add(new SimpleGrantedAuthority("USER"));
+                roles.add(new SimpleGrantedAuthority("ROLE_USER"));
             }
             return new User(username, "pass", true, true, true, true, roles);
 
